@@ -6,10 +6,10 @@ We are treating closed-source frontier models and local open-source vision model
   _e.g._, _"Analyze this brain MRI. Classify it into one of four categories: glioma, meningioma, pituitary, or no tumor. Provide your clinical reasoning."_
 
 - **The Frontier Challenger:**
-  GPT-4o (via the OpenAI API), using your $4.61 balance to evaluate a subset of test images.
+  GPT-4o (via the OpenAI API), using KAGGLE_API_TOKEN to evaluate a subset of test images.
 
 - **The Local Challenger:**
-  Open-source vision-language models like Qwen2-VL-7B or Llama-3.2-11B-Vision hosted on your RunPod instance (using your $3.15 compute balance).
+  Open-source vision-language models like Qwen2-VL-7B or Llama-3.2-11B-Vision hosted on RunPod instance.
 
 - **The Benchmark Outputs:**
   Models are compared on three axes:
