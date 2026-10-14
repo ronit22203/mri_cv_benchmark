@@ -6,7 +6,7 @@ import pandas as pd
 from PIL import Image
 
 from medical_cv_benchmark.models.base import BaseModelAdapter
-from medical_cv_benchmark.utils.telemetry import configure_logging, estimate_cost_usd, log_inference
+from medical_cv_benchmark.utils.telemetry import configure_logging, estimate_cost_usd, logger
 
 DEFAULT_PROMPT = (
     "Analyze this brain MRI. Classify it into one of four categories: "
@@ -122,16 +122,6 @@ def _score_adapter(
     except Exception as exc:
         row["error"] = str(exc)
 
-    log_inference(
-        model=row["model"],
-        ground_truth=ground_truth,
-        predicted_label=row["predicted_label"],
-        correct=row["correct"],
-        latency_seconds=row["latency_seconds"] or 0.0,
-        total_tokens=row["total_tokens"],
-        cost_usd=row["cost_usd"],
-        error=row["error"],
-    )
     return row
 
 
@@ -144,12 +134,16 @@ def run_benchmark(
     prompt: str = DEFAULT_PROMPT,
     hourly_rate_usd: float = 0.0,
     max_workers: int | None = None,
+    output_dir: Path | None = None,
 ) -> pd.DataFrame:
     """Score each adapter on labeled MRI slices and return one row per inference.
 
     Adapters for the same image run concurrently. Latency is still measured
     inside each request, so overlap does not change the recorded timings.
+    Metrics are written to a markdown file under benchmarks/.
     """
+    from medical_cv_benchmark.evaluators.report import write_benchmark_report
+
     configure_logging()
     if not adapters:
         return pd.DataFrame()
@@ -175,7 +169,11 @@ def run_benchmark(
             ]
             rows.extend(future.result() for future in futures)
 
-    return pd.DataFrame(rows)
+    results = pd.DataFrame(rows)
+    report_path = write_benchmark_report(results, output_dir)
+    results.attrs["report_path"] = str(report_path)
+    logger.info("benchmark report written to %s", report_path)
+    return results
 
 
 def summarize(results: pd.DataFrame) -> pd.DataFrame:
