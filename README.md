@@ -86,6 +86,25 @@ python -m src.evaluators.run_benchmark --config configs/default_eval.yaml
 
 ---
 
+<!-- benchmark-summary:start -->
+## Results
+
+Parsed from 60 inference rows in `BENCHMARK_REPORT.md`.
+
+| model | n | correct | accuracy | mean_latency_seconds | prompt_tokens | completion_tokens | total_tokens | run_cost_usd | cost_per_1000_usd | errors |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Qwen/Qwen2-VL-7B-Instruct | 20 | 12/20 | 0.600 | 2.670 | 6640 | 1805 | 8445 | 0.000000 | 0.000000 | 0 |
+| gpt-6.1-sol | 20 | 17/20 | 0.850 | 5.636 | 6083 | 2869 | 8952 | 0.040856 | 2.042800 | 0 |
+| Qwen/Qwen3-VL-8B-Instruct | 20 | 11/20 | 0.550 | 4.780 | 5358 | 4193 | 9551 | 0.000000 | 0.000000 | 0 |
+
+| ground_truth | Qwen/Qwen2-VL-7B-Instruct | gpt-6.1-sol | Qwen/Qwen3-VL-8B-Instruct |
+| --- | --- | --- | --- |
+| glioma | 3/5 | 5/5 | 2/5 |
+| meningioma | 1/5 | 2/5 | 0/5 |
+| notumor | 3/5 | 5/5 | 4/5 |
+| pituitary | 5/5 | 5/5 | 5/5 |
+
+<!-- benchmark-summary:end -->
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
