@@ -10,12 +10,6 @@ variable "cloud_type" {
   default     = "SECURE"
 }
 
-variable "data_center_id" {
-  type        = string
-  description = "RunPod data center for the network volume and the pod. The volume and pod must share a region."
-  default     = "US-CA-2"
-}
-
 variable "container_image" {
   type    = string
   default = "vllm/vllm-openai:latest"
@@ -24,7 +18,7 @@ variable "container_image" {
 variable "model_name" {
   type        = string
   description = "Hugging Face model served by vLLM."
-  default     = "Qwen/Qwen2-VL-7B-Instruct"
+  default     = "Qwen/Qwen3-VL-8B-Instruct"
 }
 
 variable "volume_size_gb" {

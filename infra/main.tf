@@ -1,34 +1,30 @@
-# Persistent storage so model weights survive pod replacement.
-resource "runpod_network_volume" "model_cache" {
-  name           = "vllm-model-cache"
-  size           = var.volume_size_gb
-  data_center_id = var.data_center_id
-}
-
 resource "runpod_pod" "inference_worker" {
   name                 = "medical-cv-vllm-node"
   image_name           = var.container_image
   gpu_type_ids         = [var.gpu_type_id]
   gpu_count            = 1
   cloud_type           = var.cloud_type
-  data_center_ids      = [var.data_center_id]
   container_disk_in_gb = 50
   volume_in_gb         = var.volume_size_gb
   volume_mount_path    = "/root/.cache/huggingface"
-  network_volume_id    = runpod_network_volume.model_cache.id
   support_public_ip    = true
 
   ports = ["8000/http", "22/tcp"]
 
-  # Image ENTRYPOINT is `vllm`. `serve` plus the model name is the start command.
+  # Image ENTRYPOINT is already `vllm serve`. The model name is the first argument.
+  # A 24 GB GPU only has a few hundred MB left after the weights load, so the
+  # context has to stay short. Classification does not need the 32k default.
   docker_start_cmd = [
-    "serve",
     var.model_name,
     "--host",
     "0.0.0.0",
     "--port",
     "8000",
     "--trust-remote-code",
+    "--max-model-len",
+    "4096",
+    "--gpu-memory-utilization",
+    "0.95",
   ]
 }
 
