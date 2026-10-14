@@ -1,6 +1,6 @@
-# mri-vision-benchmark
+# mri-cv-benchmark
 
-An empirical benchmarking harness comparing local open-source vision architectures against OpenAI frontier models on medical MRI diagnostic tasks—evaluating **accuracy**, **latency**, and **inference economics**.
+An empirical benchmarking harness comparing local open-source computer vision architectures against OpenAI frontier models on medical MRI diagnostic tasks—evaluating **accuracy**, **latency**, and **inference economics**.
 
 ---
 
